@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nit.weibo.dao.CardMapper" >
+  <resultMap id="BaseResultMap" type="com.nit.weibo.model.Card" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="cleankey" property="cleankey" jdbcType="VARCHAR" />
+    <result column="is_used" property="is_used" jdbcType="INTEGER" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="getcard_time" property="getcard_time" jdbcType="TIMESTAMP" />
+    <result column="use_time" property="use_time" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cleankey, is_used, openid, getcard_time, use_time, end_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from card_list
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from card_list
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.nit.weibo.model.Card" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into card_list (cleankey, is_used, openid, 
+      getcard_time, use_time, end_time
+      )
+    values (#{cleankey,jdbcType=VARCHAR}, #{is_used,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, 
+      #{getcard_time,jdbcType=TIMESTAMP}, #{use_time,jdbcType=TIMESTAMP}, #{end_time,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.nit.weibo.model.Card" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into card_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cleankey != null" >
+        cleankey,
+      </if>
+      <if test="is_used != null" >
+        is_used,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="getcard_time != null" >
+        getcard_time,
+      </if>
+      <if test="use_time != null" >
+        use_time,
+      </if>
+      <if test="end_time != null" >
+        end_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cleankey != null" >
+        #{cleankey,jdbcType=VARCHAR},
+      </if>
+      <if test="is_used != null" >
+        #{is_used,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="getcard_time != null" >
+        #{getcard_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="use_time != null" >
+        #{use_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end_time != null" >
+        #{end_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nit.weibo.model.Card" >
+    update card_list
+    <set >
+      <if test="cleankey != null" >
+        cleankey = #{cleankey,jdbcType=VARCHAR},
+      </if>
+      <if test="is_used != null" >
+        is_used = #{is_used,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null" >
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="getcard_time != null" >
+        getcard_time = #{getcard_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="use_time != null" >
+        use_time = #{use_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="end_time != null" >
+        end_time = #{end_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nit.weibo.model.Card" >
+    update card_list
+    set cleankey = #{cleankey,jdbcType=VARCHAR},
+      is_used = #{is_used,jdbcType=INTEGER},
+      openid = #{openid,jdbcType=VARCHAR},
+      getcard_time = #{getcard_time,jdbcType=TIMESTAMP},
+      use_time = #{use_time,jdbcType=TIMESTAMP},
+      end_time = #{end_time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

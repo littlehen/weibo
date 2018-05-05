@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>管理平台</title>
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="./../front-plugin/bootstrap-3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./../front-plugin/dateTimepicker-2.0/bootstrap-datetimepicker.min.css">
+    <!-- 上传插件 -->
+    <link rel="stylesheet" href="./../front-plugin/bootstrap-fileinput-master/css/fileinput.min.css">
+    <!--弹出提示插件  -->
+    <link rel="stylesheet" href="./../front-plugin/bootstrap-sweetalert-master/dist/sweetalert.css">
+    <!-- bootstrap表单验证插件 -->
+	<link rel="stylesheet" href="./../front-plugin/bootstrapValidator-0.5.3/bootstrapValidator.min.css">
+    <!-- dataTables基本样式 -->
+	<link rel="stylesheet" href="./../front-plugin/datatables-1.10.11/dataTables.bootstrap.min.css">
+	<!-- dataTables buttons -->
+	<link rel="stylesheet" href="./../front-plugin/datatables-1.10.11/buttons.dataTables.min.css">
+	<link rel="stylesheet" href="./../front-plugin/datatables-1.10.11/select.dataTables.min.css">
+	<!-- bootstrap开关控件 -->
+	<link rel="stylesheet" href="./../front-plugin/bootstrap-switch-3.3.2/css/bootstrap3/bootstrap-switch.min.css">
+    <!-- MetisMenu CSS -->
+    <link rel="stylesheet" href="./../front-plugin/metisMenu/metisMenu.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./../front-plugin/sb-admin-2.min.css">
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="./../front-plugin/font-awesome-4.6.3/css/font-awesome.min.css" type="text/css">
+    <!--引入wangEditor.css-->
+	<link rel="stylesheet" type="text/css" href="./../front-plugin/wangEditor/dist/css/wangEditor.min.css"/>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="./global.js"></script>
+</head>
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0; background-color: #5BC0DE" >
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html" style="color:#fff;"><span id="title">管理平台</span></a>
+            </div>
+            <!-- /.navbar-header -->
+			
+            <ul class="nav navbar-top-links navbar-right">
+            	<li>欢迎登陆：<span style="font-family: 黑体" id="showName"></span></li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <!-- <li>
+                        	<a href="#" onclick="$.loadURL('./user/index.html','个人中心 ')"><i class="fa fa-user fa-fw"></i> 个人中心</a>
+                        </li>
+                        <li>
+                        	<a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li> -->
+                        <li class="divider"></li>
+                        <li><a href="#" onclick="$.logoutCheck()"><i class="fa fa-sign-out fa-fw"></i> 退出</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+			<!-- /.navbar-static-side -->
+        </nav>
+        
+        <div id="htContain">
+            <div class="navbar-default sidebar" role="navigation" style="color: #000;">
+            	<div class="sidebar-nav navbar-collapse" id="sidebar">
+					<div align="center" style="padding-top: 20px;">
+						<img src="./../img/loading.gif" />加载中...
+					</div>
+				</div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            
+	        <div id="page-wrapper" style="min-height: 99px;">
+	            <div id="main">
+					<div id="menuTitleDiv" style="height: 35px; margin: 0px 0px 5px 0px; padding: 6px 0px 0px 0px; background-color: #D9EDF7; border: 1px solid #D5D5D5;">
+						<span class='glyphicon glyphicon-home' aria-hidden='true' style="margin-left: 10px;"></span>
+						<span id="menuTitle" style="font-size: 14px;"></span>
+					</div>
+					<div class="table-responsive" id="area"></div>
+				</div>
+	        </div>
+	        <!-- /#page-wrapper -->
+		</div>
+		
+    </div>
+    <!-- /#wrapper -->
+    
+    <footer class="footer" id="footer">
+    	<h5 style="text-align:center;" >&copy; 2017 - 2018 <span id="version" class="label label-info">v2.0</span></h5>
+	</footer>
+    
+    <!-- jQuery -->
+    <script src="./../front-plugin/jquery-1.12.0/jquery-1.12.0.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="./../front-plugin/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+    <script src="./../front-plugin/dateTimepicker-2.0/bootstrap-datetimepicker.js"></script>
+	<script src="./../front-plugin/dateTimepicker-2.0/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="./../front-plugin/bootstrapValidator-0.5.3/bootstrapValidator.min.js"></script>
+    <!-- 上传插件 -->
+	<script src="./../front-plugin/bootstrap-fileinput-master/js/fileinput.min.js"></script>
+    <script src="./../front-plugin/bootstrap-fileinput-master/js/locales/zh.js"></script>
+    <!--弹出提示插件  -->
+	<script src="./../front-plugin/bootstrap-sweetalert-master/dist/sweetalert.min.js"></script>
+	<script src="./../front-plugin/datatables-1.10.11/jquery.dataTables.min.js"></script>
+	<script src="./../front-plugin/datatables-1.10.11/dataTables.bootstrap.min.js"></script>
+	<script src="./../front-plugin/datatables-1.10.11/dataTables.select.min.js"></script>
+	<script src="./../front-plugin/datatables-1.10.11/dataTables.buttons.min.js"></script>
+	<script src="./../front-plugin/datatables-1.10.11/buttons.html5.min.js"></script>
+	<script src="./../front-plugin/datatables-1.10.11/buttons.print.min.js"></script>
+	<script src="./../front-plugin/bootstrap-switch-3.3.2/js/bootstrap-switch.min.js"></script>
+    <script src="./../front-plugin/bootbox-4.4.0/bootbox.min.js"></script>
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="./../front-plugin/metisMenu/metisMenu.min.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="./../front-plugin/sb-admin-2.min.js"></script>
+    <script src="index.js"></script>
+    <!-- echarts插件 -->
+    <script src="./../front-plugin/echarts/echarts.min.js"></script>
+	<!-- 引入 vintage 主题 -->
+	<script src="./../front-plugin/echarts/theme/infographic.js"></script>
+	<!--引入wangEditor.js 注意：javascript必须放在body最后，否则可能会出现问题-->
+	<script type="text/javascript" src="./../front-plugin/wangEditor/dist/js/wangEditor.min.js"></script>
+</body>
+</html>

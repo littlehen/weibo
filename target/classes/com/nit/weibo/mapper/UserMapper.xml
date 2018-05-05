@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nit.weibo.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.nit.weibo.model.User" >
+    <id column="openid" property="openid" jdbcType="VARCHAR" />
+    <id column="UserId" property="userId" jdbcType="INTEGER" />
+    <result column="cname" property="cname" jdbcType="VARCHAR" />
+    <result column="new_member" property="new_member" jdbcType="INTEGER" />
+    <result column="member" property="member" jdbcType="INTEGER" />
+    <result column="member_endtime" property="member_endtime" jdbcType="TIMESTAMP" />
+    <result column="resight_time" property="resight_time" jdbcType="TIMESTAMP" />
+    <result column="cmoney" property="cmoney" jdbcType="VARCHAR" />
+    <result column="cleankey" property="cleankey" jdbcType="VARCHAR" />
+    <result column="clean_starttime" property="clean_starttime" jdbcType="TIMESTAMP" />
+    <result column="clean_endtime" property="clean_endtime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <select id="getCount" resultType="java.lang.Integer">
+    select count(*) from user_list
+  </select>
+
+  <select id="getCmoney" resultType="java.lang.Integer">
+    select cmoney from user_list where UserId=#{0}
+  </select>
+
+  <select id="getCount2" resultType="java.lang.Integer">
+    select count(*) from user_list where cname like CONCAT('%',#{0},'%')
+  </select>
+
+  <select id="getCountY" resultType="java.lang.Integer">
+    select count(*) from user_list where member_endtime &gt; NOW()
+  </select>
+
+  <select id="getCount2Y" resultType="java.lang.Integer">
+    select count(*) from user_list where cname like CONCAT('%',#{0},'%') where member_endtime &gt; NOW()
+  </select>
+  
+  <select id="getCountN" resultType="java.lang.Integer">
+    select count(*) from user_list where member_endtime &lt;= NOW() or member_endtime is null
+  </select>
+
+  <select id="getCount2N" resultType="java.lang.Integer">
+    select count(*) from user_list where cname like CONCAT('%',#{0},'%') where member_endtime &lt;= NOW() or member_endtime is null
+  </select>
+
+  <select id="getDataTable" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+    select * from user_list ORDER BY UserId DESC
+  </select>
+
+  <select id="getDataTable2" resultMap="BaseResultMap" >
+    select * from user_list where cname like CONCAT('%',#{0},'%') ORDER BY UserId DESC
+  </select>
+  
+  <select id="getDataTableY" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+    select * from user_list where member_endtime &gt; NOW() ORDER BY UserId DESC
+  </select>
+
+  <select id="getDataTable2Y" resultMap="BaseResultMap" >
+    select * from user_list where cname like CONCAT('%',#{0},'%') where member_endtime &gt; NOW() ORDER BY UserId DESC
+  </select>
+  
+  <select id="getDataTableN" parameterType="java.lang.Integer" resultMap="BaseResultMap" >
+    select * from user_list where member_endtime &lt;= NOW() or member_endtime is null ORDER BY UserId DESC
+  </select>
+
+  <select id="getDataTable2N" resultMap="BaseResultMap" >
+    select * from user_list where cname like CONCAT('%',#{0},'%') where member_endtime &lt;= NOW() or member_endtime is null ORDER BY UserId DESC
+  </select>
+  
+  <sql id="Base_Column_List" >
+    openid, UserId, cname, new_member, member, member_endtime, resight_time, cmoney, 
+    cleankey, clean_starttime, clean_endtime
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.nit.weibo.model.UserKey" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_list
+    where openid = #{openid,jdbcType=VARCHAR}
+      and UserId = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.nit.weibo.model.UserKey" >
+    delete from user_list
+    where openid = #{openid,jdbcType=VARCHAR}
+      and UserId = #{userId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nit.weibo.model.User" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_list (openid, cname, new_member, 
+      member, member_endtime, resight_time, 
+      cmoney, cleankey, clean_starttime, 
+      clean_endtime)
+    values (#{openid,jdbcType=VARCHAR}, #{cname,jdbcType=VARCHAR}, #{new_member,jdbcType=INTEGER}, 
+      #{member,jdbcType=INTEGER}, #{member_endtime,jdbcType=TIMESTAMP}, #{resight_time,jdbcType=TIMESTAMP}, 
+      #{cmoney,jdbcType=VARCHAR}, #{cleankey,jdbcType=VARCHAR}, #{clean_starttime,jdbcType=TIMESTAMP}, 
+      #{clean_endtime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nit.weibo.model.User" >
+    <selectKey resultType="java.lang.Integer" keyProperty="userId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into user_list
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="cname != null" >
+        cname,
+      </if>
+      <if test="new_member != null" >
+        new_member,
+      </if>
+      <if test="member != null" >
+        member,
+      </if>
+      <if test="member_endtime != null" >
+        member_endtime,
+      </if>
+      <if test="resight_time != null" >
+        resight_time,
+      </if>
+      <if test="cmoney != null" >
+        cmoney,
+      </if>
+      <if test="cleankey != null" >
+        cleankey,
+      </if>
+      <if test="clean_starttime != null" >
+        clean_starttime,
+      </if>
+      <if test="clean_endtime != null" >
+        clean_endtime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="cname != null" >
+        #{cname,jdbcType=VARCHAR},
+      </if>
+      <if test="new_member != null" >
+        #{new_member,jdbcType=INTEGER},
+      </if>
+      <if test="member != null" >
+        #{member,jdbcType=INTEGER},
+      </if>
+      <if test="member_endtime != null" >
+        #{member_endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="resight_time != null" >
+        #{resight_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cmoney != null" >
+        #{cmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="cleankey != null" >
+        #{cleankey,jdbcType=VARCHAR},
+      </if>
+      <if test="clean_starttime != null" >
+        #{clean_starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clean_endtime != null" >
+        #{clean_endtime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nit.weibo.model.User" >
+    update user_list
+    <set >
+      <if test="cname != null" >
+        cname = #{cname,jdbcType=VARCHAR},
+      </if>
+      <if test="new_member != null" >
+        new_member = #{new_member,jdbcType=INTEGER},
+      </if>
+      <if test="member != null" >
+        member = #{member,jdbcType=INTEGER},
+      </if>
+      <if test="member_endtime != null" >
+        member_endtime = #{member_endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="resight_time != null" >
+        resight_time = #{resight_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cmoney != null" >
+        cmoney = #{cmoney,jdbcType=VARCHAR},
+      </if>
+      <if test="cleankey != null" >
+        cleankey = #{cleankey,jdbcType=VARCHAR},
+      </if>
+      <if test="clean_starttime != null" >
+        clean_starttime = #{clean_starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="clean_endtime != null" >
+        clean_endtime = #{clean_endtime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where openid = #{openid,jdbcType=VARCHAR}
+      and UserId = #{userId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateMoney" >
+    <selectKey resultType="java.lang.Integer" order="BEFORE" keyProperty="userId">
+      SELECT
+      (select UserId FROM weibo WHERE
+      UserId = #{0})userId
+      from DUAL
+    </selectKey>
+    update user_list
+    SET
+    cmoney = cmoney-#{0}
+    where UserId = #{1}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.nit.weibo.model.User" >
+    update user_list
+    set cname = #{cname,jdbcType=VARCHAR},
+      new_member = #{new_member,jdbcType=INTEGER},
+      member = #{member,jdbcType=INTEGER},
+      member_endtime = #{member_endtime,jdbcType=TIMESTAMP},
+      resight_time = #{resight_time,jdbcType=TIMESTAMP},
+      cmoney = #{cmoney,jdbcType=VARCHAR},
+      cleankey = #{cleankey,jdbcType=VARCHAR},
+      clean_starttime = #{clean_starttime,jdbcType=TIMESTAMP},
+      clean_endtime = #{clean_endtime,jdbcType=TIMESTAMP}
+    where openid = #{openid,jdbcType=VARCHAR}
+      and UserId = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

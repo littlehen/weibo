@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet"  href="../bootstrap-3.3.5/css/bootstrap.min.css">
+
+<title>阿里云图片上传示例</title>
+</head>
+<style>
+.choosed{
+	border: 2px #337ab7 solid;
+}
+</style>
+<body>
+<button class='btn btn-primary' onclick="$.uploadPhoto()"><span class='glyphicon glyphicon-picture' ></span> 图片上传</button>
+
+<button class='btn btn-primary' onclick="$.deletePhoto()"><span class='glyphicon glyphicon-remove' ></span> 删除图片</button>
+
+<div class="modal fade" id="upPhotoModal" tabindex="-1" role="dialog"
+		aria-labelledby="upPhotoModalLabel" aria-hidden="true" >
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<label class="modal-title" id="upPhotoModalLabel"></label>
+					<button type="button" title='关闭' class="btn btn-danger btn-xs" onclick="$.closeUpPhModal()" style="float:right;margin-top: -5px;">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</button>
+				</div>
+				<div class="modal-body row">
+				
+					<div id="container" class="col-sm-12">
+						<a id="selectfiles" href="javascript:void(0);" class='btn btn-primary'><span class='glyphicon glyphicon-picture' ></span> 选择图片</a>
+						<a id="postfiles" href="javascript:void(0);" class='btn btn-success'><span class='glyphicon glyphicon-send' ></span> 开始上传</a>
+					</div>
+					<div id="ossfile" class="col-sm-12" style="margin-top:20px;">
+					
+					</div>
+				</div>	
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="$.closeUpPhModal()">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						取消
+					</button>
+					<button type="button" class="btn btn-success" onclick="$.doneUpPhoto()">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true" ></span>
+						完成
+					</button>
+				</div>		
+			</div>
+		</div>
+	</div>
+<div id='photoList'>
+	
+</div>
+<script src="../jquery-1.12.0/jquery-1.12.0.min.js"></script>
+<script src="../bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<!-- web 直传需要导入的包 -->
+<script src="lib/plupload-2.1.2/js/plupload.full.min.js"></script>
+<script src="lib/crypto1/crypto/crypto.js"></script>
+<script src="lib/crypto1/hmac/hmac.js"></script>
+<script src="lib/crypto1/sha1/sha1.js"></script>
+<script src="lib/base64.js"></script>
+<script src="upload.js"></script>
+<script>
+//关闭
+$.closeUpPhModal = function(){
+	$("#upPhotoModal").modal("hide");
+	$("#ossfile").empty();
+	clearOssData();
+};
+//弹出上传图片的框
+$.uploadPhoto = function(){
+	$("#upPhotoModalLabel").text("上传图片");
+	$("#upPhotoModal").modal({
+		backdrop : 'static',
+		keyboard : true,
+		show : true
+	});
+};
+//获取图片信息
+$.doneUpPhoto = function(){
+	var fileInfo  = getOssFileInfo();
+	$("#photoList").empty();
+	for(var i=0;i<fileInfo.length;i++){
+		$("#photoList").append("<img alt='"+fileInfo[i].fileName+"' src='"+fileInfo[i].fileUrl+"' data-filekey='"+fileInfo[i].fileKey+"' style='height:100px;' onclick='$.choosed(this)'/>");
+	}
+	console.log(fileInfo);
+	$.closeUpPhModal();
+};
+
+//判断文件类型(在需要的js文件添加，文件名务必保持一致)
+function judgeFileType(suffix){
+	//图片文件
+	if (!(suffix == ".jpg" || suffix == ".JPG" || suffix == ".png" || suffix == ".PNG" || suffix == ".jpeg" || suffix == ".JPEG" || suffix == ".gif" || suffix == ".GIF" || suffix == ".bmp" || suffix == ".BMP")){
+		alert("请选择图片文件！");
+		return false;
+	}
+	//word文件
+	/* if(!(suffix == ".doc" || suffix == ".docx")){
+		alert("请上传word文件");
+		return false;
+	} */
+}
+//删除图片
+$.deletePhoto = function(){
+	var photo = $(".choosed")
+	if(photo.length!=0){
+		$.ajax({
+			url : "http://localhost:8080/zhaopin/zp_qiye/deleteOssFileByFileKey",
+			type : "post",
+			data : {
+				userDevice : "inf",
+				fileKey : photo.data("filekey")
+			},
+			dataType : 'text',
+			success : function(msg){
+				console.log(msg);
+			}
+		});
+	}
+}
+
+//选中图片（演示需要的函数，根据需要添加）
+$.choosed = function(th){
+	if($(th).hasClass("choosed")){
+		$(th).removeClass("choosed");
+	}
+	else{
+		$(".choosed").removeClass("choosed");
+		$(th).addClass("choosed");
+	}
+}
+</script>
+</body>
+</html>

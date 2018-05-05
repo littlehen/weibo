@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nit.weibo.dao.PayMapper" >
+  <resultMap id="BaseResultMap" type="com.nit.weibo.model.Pay" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="UserId" property="userId" jdbcType="INTEGER" />
+    <result column="LocalCode" property="localCode" jdbcType="VARCHAR" />
+    <result column="WechatPayCode" property="wechatPayCode" jdbcType="VARCHAR" />
+    <result column="Type" property="type" jdbcType="INTEGER" />
+    <result column="Time" property="time" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.nit.weibo.model.PayWithBLOBs" extends="BaseResultMap" >
+    <result column="Money" property="money" jdbcType="LONGVARCHAR" />
+    <result column="Body" property="body" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <select id="getCount" parameterType="com.nit.weibo.dto.TypeSDto" resultType="java.lang.Integer">
+    select count(*) from pay,user_list where pay.UserId = user_list.UserId
+    <if test="type != null" >
+        and Type = #{type,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="getCount2" parameterType="com.nit.weibo.dto.TypeSDto" resultType="java.lang.Integer">
+    select count(*) from pay,user_list where pay.UserId = user_list.UserId and cname like CONCAT('%',#{search,jdbcType=VARCHAR},'%')
+  	<if test="type != null" >
+        and Type = #{type,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+  <select id="getDataTable" parameterType="com.nit.weibo.dto.TypeSDto" resultType="com.nit.weibo.dto.PayDto" >
+    select * from pay,user_list where pay.UserId = user_list.UserId
+    <if test="type != null" >
+        and Type = #{type,jdbcType=INTEGER}
+    </if>
+    ORDER BY pay.UserId DESC
+  </select>
+
+  <select id="getDataTable2" parameterType="com.nit.weibo.dto.TypeSDto" resultType="com.nit.weibo.dto.PayDto" >
+    select * from pay,user_list where pay.UserId = user_list.UserId and cname like CONCAT('%',#{search,jdbcType=VARCHAR},'%')
+    <if test="type != null" >
+        and Type = #{type,jdbcType=INTEGER}
+    </if>
+    ORDER BY pay.UserId DESC
+  </select>
+  
+  <sql id="Base_Column_List" >
+    Id, UserId, LocalCode, WechatPayCode, Type, Time
+  </sql>
+  <sql id="Blob_Column_List" >
+    Money, Body
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from pay
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from pay
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nit.weibo.model.PayWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pay (UserId, LocalCode, WechatPayCode, Type, 
+      Time, Money, Body
+      )
+    values (#{userId,jdbcType=INTEGER}, #{localCode,jdbcType=VARCHAR}, #{wechatPayCode,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{time,jdbcType=VARCHAR}, #{money,jdbcType=LONGVARCHAR}, #{body,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.nit.weibo.model.PayWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into pay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        UserId,
+      </if>
+      <if test="localCode != null" >
+        LocalCode,
+      </if>
+      <if test="wechatPayCode != null" >
+        WechatPayCode,
+      </if>
+      <if test="type != null" >
+        Type,
+      </if>
+      <if test="time != null" >
+        Time,
+      </if>
+      <if test="money != null" >
+        Money,
+      </if>
+      <if test="body != null" >
+        Body,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="localCode != null" >
+        #{localCode,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatPayCode != null" >
+        #{wechatPayCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        #{money,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="body != null" >
+        #{body,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nit.weibo.model.PayWithBLOBs" >
+    update pay
+    <set >
+      <if test="userId != null" >
+        UserId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="localCode != null" >
+        LocalCode = #{localCode,jdbcType=VARCHAR},
+      </if>
+      <if test="wechatPayCode != null" >
+        WechatPayCode = #{wechatPayCode,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        Type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        Time = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="money != null" >
+        Money = #{money,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="body != null" >
+        Body = #{body,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.nit.weibo.model.PayWithBLOBs" >
+    update pay
+    set UserId = #{userId,jdbcType=INTEGER},
+      LocalCode = #{localCode,jdbcType=VARCHAR},
+      WechatPayCode = #{wechatPayCode,jdbcType=VARCHAR},
+      Type = #{type,jdbcType=INTEGER},
+      Time = #{time,jdbcType=VARCHAR},
+      Money = #{money,jdbcType=LONGVARCHAR},
+      Body = #{body,jdbcType=LONGVARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nit.weibo.model.Pay" >
+    update pay
+    set UserId = #{userId,jdbcType=INTEGER},
+      LocalCode = #{localCode,jdbcType=VARCHAR},
+      WechatPayCode = #{wechatPayCode,jdbcType=VARCHAR},
+      Type = #{type,jdbcType=INTEGER},
+      Time = #{time,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

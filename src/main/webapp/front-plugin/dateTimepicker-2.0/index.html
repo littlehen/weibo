@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>时间选择插件示例</title>
+<link rel="stylesheet"  href="../bootstrap-3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet"  href="bootstrap-datetimepicker.min.css">
+<script src="../jquery-1.12.0/jquery-1.12.0.min.js"></script>
+<script src="../bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="bootstrap-datetimepicker.js"></script>
+<script src="locales/bootstrap-datetimepicker.zh-CN.js"></script>
+</head>
+<body>
+<input type="text" id='time' />
+<script>
+$('#time').datetimepicker({
+	format : 'yyyy-mm-dd hh:ii',
+	autoclose : true,
+	todayBtn : 'linked',
+	language : 'zh-CN',
+/* 	startView : 4,
+	minView : 4, */
+});
+</script>
+</body>
+</html>

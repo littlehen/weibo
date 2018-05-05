@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nit.weibo.dao.CostMapper" >
+  <resultMap id="BaseResultMap" type="com.nit.weibo.model.Cost" >
+    <id column="CostId" property="costId" jdbcType="INTEGER" />
+    <result column="UserId" property="userId" jdbcType="INTEGER" />
+    <result column="Uses" property="uses" jdbcType="INTEGER" />
+    <result column="Time" property="time" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CostId, UserId, Uses, Time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from cost
+    where CostId = #{costId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from cost
+    where CostId = #{costId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nit.weibo.model.Cost" >
+    <selectKey resultType="java.lang.Integer" keyProperty="costId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cost (UserId, Uses, Time
+      )
+    values (#{userId,jdbcType=INTEGER}, #{uses,jdbcType=INTEGER}, #{time,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.nit.weibo.model.Cost" >
+    <selectKey resultType="java.lang.Integer" keyProperty="costId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cost
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        UserId,
+      </if>
+      <if test="uses != null" >
+        Uses,
+      </if>
+      <if test="time != null" >
+        Time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="uses != null" >
+        #{uses,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nit.weibo.model.Cost" >
+    update cost
+    <set >
+      <if test="userId != null" >
+        UserId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="uses != null" >
+        Uses = #{uses,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        Time = #{time,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CostId = #{costId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nit.weibo.model.Cost" >
+    update cost
+    set UserId = #{userId,jdbcType=INTEGER},
+      Uses = #{uses,jdbcType=INTEGER},
+      Time = #{time,jdbcType=VARCHAR}
+    where CostId = #{costId,jdbcType=INTEGER}
+  </update>
+</mapper>

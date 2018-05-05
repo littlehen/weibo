@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- bootstrap样式 -->
+<link rel="stylesheet" href="../front-plugin/bootstrap-3.3.5/css/bootstrap.min.css">
+</head>
+<body>
+
+<div width="80px" id = "img" ></div><br/>
+<span style="font-size: 5px; color: gray; margin-left: 30px;">仅支持JPG、JPEG、PNG格式</span>
+<a class='btn btn-default btn-sm' style="margin: 0 90px;" onclick="$.openUpPic()">选择图片</a>
+
+<div class="modal fade" id="upPictureModal" tabindex="-1" role="dialog"
+		aria-labelledby="upPictureModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<label class="modal-title" id="upPictureModalLabel"></label>
+					<button type="button" title='关闭' class="btn btn-danger btn-xs" onclick="$.closeUpPhModal()"
+						style="float: right; margin-top: -5px;">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					</button>
+				</div>
+				<div class="modal-body row">
+
+					<div id="container" class="col-sm-12">
+						<a id="selectfiles" href="javascript:void(0);" class='btn btn-primary'><span
+							class='glyphicon glyphicon-picture'></span> 选择图片</a> <a id="postfiles" href="javascript:void(0);"
+							class='btn btn-success'><span class='glyphicon glyphicon-send'></span> 开始上传</a>
+					</div>
+					<div id="ossfile" class="col-sm-12" style="margin-top: 20px;"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" onclick="$.closeUpPhModal()">
+						<span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 取消
+					</button>
+					<button type="button" class="btn btn-success" onclick="$.doneUpPhoto()">
+						<span class="glyphicon glyphicon-ok" aria-hidden="true"></span> 完成
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<script src="../front-plugin/jquery-1.12.0/jquery-1.12.0.min.js"></script>
+	<script src="../front-plugin/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<!--文件上传  -->
+    <script src="../front-plugin/bootstrap.file-input.js"></script>
+    
+    <script src="../front-plugin/oss-h5-upload-js-direct/lib/plupload-2.1.2/js/plupload.full.min.js"></script>
+	<script src="../front-plugin/oss-h5-upload-js-direct/lib/crypto1/crypto/crypto.js"></script>
+	<script src="../front-plugin/oss-h5-upload-js-direct/lib/crypto1/hmac/hmac.js"></script>
+	<script src="../front-plugin/oss-h5-upload-js-direct/lib/crypto1/sha1/sha1.js"></script>
+	<script src="../front-plugin/oss-h5-upload-js-direct/lib/base64.js"></script>
+	<script src="../front-plugin/oss-h5-upload-js-direct/upload.js"></script>
+    <script type="text/javascript">
+    $.updatePic = function () {
+        $.ajax({
+            url: SERVERURL + "zp_qiye/upload",
+            type: 'post',
+            datatype: 'json',
+            data: {
+                photo: photo,
+                id: gId,
+            },
+            success: function (data) {
+                if (data.isSuccess == true) {
+                    $.alert("修改成功！", 1);
+                } else {
+                    $.alert("修改失败！", 3);
+                }
+                $("#img").attr("src", photo);
+                $("#img").attr("data-filekey", fileKey);
+                $.closeUpPhModal();
+            }
+        });
+    };
+
+    // 获取图片地址并上传
+    $.doneUpPhoto = function () {
+        var fileInfo = getOssFileInfo();
+        photo = fileInfo[0].fileUrl;
+        fileKey = fileInfo[0].fileKey;
+        alert(fileKey);
+        alert(photo);
+        $.ajax({
+            url: SERVERURL + "zp_qiye/deleteOssFileByFileKey",
+            type: "post",
+            data: {
+                fileKey: $("#img").attr('data-filekey'),
+            },
+            dataType: 'text',
+            success: function (msg) {
+                $('#upPictureModal').modal('hide');
+                $.updatePic();
+            }
+        });
+    };
+
+    // 打开上传modal框
+    $.openUpPic = function () {
+        $("#upPictureModal").modal({
+            backdrop: 'static',
+            keyboard: true,
+            show: true
+        });
+    };
+
+    // 关闭上传modal框
+    $.closeUpPhModal = function () {
+        $("#upPictureModal").modal("hide");
+        $("#ossfile").empty();
+        clearOssData();
+    };
+
+    function judgeFileType(suffix) {
+        // 图片文件
+        if (!(suffix == ".jpg" || suffix == ".JPG" || suffix == ".png" || suffix == ".PNG" || suffix == ".jpeg" || suffix == ".JPEG")) {
+            alert("请选择图片文件！");
+            return false;
+        }
+    };
+    		
+    </script>
+</body>
+</html>

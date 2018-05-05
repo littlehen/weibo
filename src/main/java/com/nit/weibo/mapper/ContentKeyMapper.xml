@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nit.weibo.dao.ContentKeyMapper" >
+  <resultMap id="BaseResultMap" type="com.nit.weibo.model.ContentKey" >
+    <id column="ContentKeyId" property="contentKeyId" jdbcType="INTEGER" />
+    <result column="UserId" property="userId" jdbcType="INTEGER" />
+    <result column="Keyword" property="keyword" jdbcType="VARCHAR" />
+    <result column="ContentFu" property="contentFu" jdbcType="INTEGER" />
+    <result column="IsFinish" property="isFinish" jdbcType="INTEGER" />
+    <result column="ZanNumber" property="zanNumber" jdbcType="INTEGER" />
+    <result column="IsZanFinish" property="isZanFinish" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.nit.weibo.model.ContentKeyWithBLOBs" extends="BaseResultMap" >
+    <result column="ContentId" property="contentId" jdbcType="LONGVARCHAR" />
+    <result column="ContentFuId" property="contentFuId" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ContentKeyId, UserId, Keyword, ContentFu, IsFinish, ZanNumber, IsZanFinish
+  </sql>
+  <sql id="Blob_Column_List" >
+    ContentId, ContentFuId
+  </sql>
+  
+  <select id="getCount" resultType="java.lang.Integer">
+   SELECT count(*) FROM
+   (SELECT
+		count(*)
+	FROM
+		user_list
+	LEFT JOIN weibo ON user_list.UserId = weibo.UserId
+	LEFT JOIN contentkey ON user_list.UserId = contentkey.UserId
+	LEFT JOIN functions ON user_list.UserId = functions.userId
+	WHERE
+		(
+			weibo.IsFinish = 0
+			OR contentkey.IsFinish = 0
+			OR contentkey.IsZanFinish = 0
+			OR functions.isfinish = 0
+		)
+	GROUP BY
+		user_list.cname)a
+  </select>
+
+  <select id="getCount2" resultType="java.lang.Integer">
+    SELECT count(*) FROM
+    (SELECT
+		count(*)
+	FROM
+		user_list
+	LEFT JOIN weibo ON user_list.UserId = weibo.UserId
+	LEFT JOIN contentkey ON user_list.UserId = contentkey.UserId
+	LEFT JOIN functions ON user_list.UserId = functions.userId
+	WHERE
+		(
+			weibo.IsFinish = 0
+			OR contentkey.IsFinish = 0
+			OR contentkey.IsZanFinish = 0
+			OR functions.isfinish = 0
+		)
+		AND user_list.cname like CONCAT('%',#{0},'%')
+	GROUP BY
+		user_list.cname)a
+  </select>
+  
+  <select id="getDataTable" resultType="com.nit.weibo.dto.ShenheDto" >
+    SELECT
+		user_list.UserId AS userId,
+		user_list.cname AS cname,
+		floor(SUM(weibo.IsFinish)/(count(*))) AS weiboIsFinish,
+		floor(SUM(contentkey.IsFinish)/(count(*))) AS contentIsFinish,
+		floor(SUM(contentkey.IsZanFinish)/(count(*))) AS zanIsFinish,
+		floor(SUM(functions.isfinish)/(count(*))) AS functionsIsFinish
+	FROM
+		user_list
+	LEFT JOIN weibo ON user_list.UserId = weibo.UserId
+	LEFT JOIN contentkey ON user_list.UserId = contentkey.UserId
+	LEFT JOIN functions ON user_list.UserId = functions.userId
+	WHERE
+		(
+			weibo.IsFinish = 0
+			OR contentkey.IsFinish = 0
+			OR contentkey.IsZanFinish = 0
+			OR functions.isfinish = 0
+		)
+	GROUP BY
+		user_list.cname
+	ORDER BY
+		user_list.UserId DESC
+  </select>
+
+  <select id="getDataTable2" resultType="com.nit.weibo.dto.ShenheDto" >
+    SELECT
+		user_list.UserId AS userId,
+		user_list.cname AS cname,
+		floor(SUM(weibo.IsFinish)/(count(*))) AS weiboIsFinish,
+		floor(SUM(contentkey.IsFinish)/(count(*))) AS contentIsFinish,
+		floor(SUM(contentkey.IsZanFinish)/(count(*))) AS zanIsFinish,
+		floor(SUM(functions.isfinish)/(count(*))) AS functionsIsFinish
+	FROM
+		user_list
+	LEFT JOIN weibo ON user_list.UserId = weibo.UserId
+	LEFT JOIN contentkey ON user_list.UserId = contentkey.UserId
+	LEFT JOIN functions ON user_list.UserId = functions.userId
+	WHERE
+		(
+			weibo.IsFinish = 0
+			OR contentkey.IsFinish = 0
+			OR contentkey.IsZanFinish = 0
+			OR functions.isfinish = 0
+		)
+		AND user_list.cname like CONCAT('%',#{0},'%')
+	GROUP BY
+		user_list.cname
+	ORDER BY
+		user_list.UserId DESC
+  </select>
+  
+  <select id="getzCount" resultType="java.lang.Integer">
+    select count(*) from contentkey where UserId = #{0} and IsZanFinish = 0
+  </select>
+
+  <select id="getZNum" resultType="java.lang.Integer">
+    select zanNumber from contentkey where ContentKeyId = #{0}
+  </select>
+  
+  <select id="getzDataTable" resultMap="BaseResultMap" >
+    select * from contentkey where UserId = #{0} and IsZanFinish = 0 ORDER BY ContentKeyId DESC
+  </select>
+  
+  <select id="getplCount" resultType="java.lang.Integer">
+    select count(*) from contentkey where UserId = #{0} and IsFinish = 0
+  </select>
+  
+  <select id="getgnCount" resultType="java.lang.Integer">
+    select count(*) from functions where userId = #{0} and isfinish = 0
+  </select>
+  
+  <select id="getplDataTable" resultType="com.nit.weibo.dto.PinglunDto" >
+    select contentKeyId, keyword, contentId, ContentFu as contentFuSwitch, contentFuId
+	from contentkey where UserId = #{0} and IsFinish = 0 ORDER BY ContentKeyId DESC
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from contentkey
+    where ContentKeyId = #{contentKeyId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from contentkey
+    where ContentKeyId = #{contentKeyId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nit.weibo.model.ContentKeyWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="contentKeyId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into contentkey (UserId, Keyword, ContentFu, 
+      IsFinish, ZanNumber, IsZanFinish, 
+      ContentId, ContentFuId)
+    values (#{userId,jdbcType=INTEGER}, #{keyword,jdbcType=VARCHAR}, #{contentFu,jdbcType=INTEGER}, 
+      #{isFinish,jdbcType=INTEGER}, #{zanNumber,jdbcType=INTEGER}, #{isZanFinish,jdbcType=INTEGER}, 
+      #{contentId,jdbcType=LONGVARCHAR}, #{contentFuId,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nit.weibo.model.ContentKeyWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="contentKeyId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into contentkey
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        UserId,
+      </if>
+      <if test="keyword != null" >
+        Keyword,
+      </if>
+      <if test="contentFu != null" >
+        ContentFu,
+      </if>
+      <if test="isFinish != null" >
+        IsFinish,
+      </if>
+      <if test="zanNumber != null" >
+        ZanNumber,
+      </if>
+      <if test="isZanFinish != null" >
+        IsZanFinish,
+      </if>
+      <if test="contentId != null" >
+        ContentId,
+      </if>
+      <if test="contentFuId != null" >
+        ContentFuId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="keyword != null" >
+        #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="contentFu != null" >
+        #{contentFu,jdbcType=INTEGER},
+      </if>
+      <if test="isFinish != null" >
+        #{isFinish,jdbcType=INTEGER},
+      </if>
+      <if test="zanNumber != null" >
+        #{zanNumber,jdbcType=INTEGER},
+      </if>
+      <if test="isZanFinish != null" >
+        #{isZanFinish,jdbcType=INTEGER},
+      </if>
+      <if test="contentId != null" >
+        #{contentId,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="contentFuId != null" >
+        #{contentFuId,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nit.weibo.model.ContentKeyWithBLOBs" >
+    update contentkey
+    <set >
+      <if test="userId != null" >
+        UserId = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="keyword != null" >
+        Keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="contentFu != null" >
+        ContentFu = #{contentFu,jdbcType=INTEGER},
+      </if>
+      <if test="isFinish != null" >
+        IsFinish = #{isFinish,jdbcType=INTEGER},
+      </if>
+      <if test="zanNumber != null" >
+        ZanNumber = #{zanNumber,jdbcType=INTEGER},
+      </if>
+      <if test="isZanFinish != null" >
+        IsZanFinish = #{isZanFinish,jdbcType=INTEGER},
+      </if>
+      <if test="contentId != null" >
+        ContentId = #{contentId,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="contentFuId != null" >
+        ContentFuId = #{contentFuId,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where ContentKeyId = #{contentKeyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.nit.weibo.model.ContentKeyWithBLOBs" >
+    update contentkey
+    set UserId = #{userId,jdbcType=INTEGER},
+      Keyword = #{keyword,jdbcType=VARCHAR},
+      ContentFu = #{contentFu,jdbcType=INTEGER},
+      IsFinish = #{isFinish,jdbcType=INTEGER},
+      ZanNumber = #{zanNumber,jdbcType=INTEGER},
+      IsZanFinish = #{isZanFinish,jdbcType=INTEGER},
+      ContentId = #{contentId,jdbcType=LONGVARCHAR},
+      ContentFuId = #{contentFuId,jdbcType=LONGVARCHAR}
+    where ContentKeyId = #{contentKeyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nit.weibo.model.ContentKey" >
+    update contentkey
+    set UserId = #{userId,jdbcType=INTEGER},
+      Keyword = #{keyword,jdbcType=VARCHAR},
+      ContentFu = #{contentFu,jdbcType=INTEGER},
+      IsFinish = #{isFinish,jdbcType=INTEGER},
+      ZanNumber = #{zanNumber,jdbcType=INTEGER},
+      IsZanFinish = #{isZanFinish,jdbcType=INTEGER}
+    where ContentKeyId = #{contentKeyId,jdbcType=INTEGER}
+  </update>
+</mapper>

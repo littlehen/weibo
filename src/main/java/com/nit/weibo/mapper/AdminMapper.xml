@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nit.weibo.dao.AdminMapper" >
+  <resultMap id="BaseResultMap" type="com.nit.weibo.model.Admin" >
+    <id column="Id" property="id" jdbcType="INTEGER" />
+    <result column="LoginName" property="loginName" jdbcType="VARCHAR" />
+    <result column="LoginPwd" property="loginPwd" jdbcType="VARCHAR" />
+    <result column="Email" property="email" jdbcType="VARCHAR" />
+    <result column="Auth" property="auth" jdbcType="INTEGER" />
+    <result column="UserSessionId" property="userSessionId" jdbcType="VARCHAR" />
+    <result column="LoginTime" property="loginTime" jdbcType="VARCHAR" />
+    <result column="RegisterTime" property="registerTime" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    Id, LoginName, LoginPwd, Email, Auth, UserSessionId, LoginTime, RegisterTime
+  </sql>
+  <select id="selectLogin" resultType="java.lang.Integer" >
+    select Id from admin where LoginName = #{0} and LoginPwd = #{1}
+  </select>
+  <select id="pro_admin_login" statementType="CALLABLE" resultType="com.nit.weibo.dto.AdminLoginDto">
+       {call pro_admin_login(
+                             #{id,jdbcType=INTEGER,mode=IN},
+                             #{userDevice,jdbcType=VARCHAR,mode=IN},
+                             #{loginIP,jdbcType=VARCHAR,mode=IN},
+                             #{sessionId,jdbcType=VARCHAR,mode=IN}
+       )}
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from admin
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nit.weibo.model.Admin" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into admin (LoginName, LoginPwd, Email, 
+      Auth, UserSessionId, LoginTime, 
+      RegisterTime)
+    values (#{loginName,jdbcType=VARCHAR}, #{loginPwd,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{auth,jdbcType=INTEGER}, #{userSessionId,jdbcType=VARCHAR}, #{loginTime,jdbcType=VARCHAR}, 
+      #{registerTime,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nit.weibo.model.Admin" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="loginName != null" >
+        LoginName,
+      </if>
+      <if test="loginPwd != null" >
+        LoginPwd,
+      </if>
+      <if test="email != null" >
+        Email,
+      </if>
+      <if test="auth != null" >
+        Auth,
+      </if>
+      <if test="userSessionId != null" >
+        UserSessionId,
+      </if>
+      <if test="loginTime != null" >
+        LoginTime,
+      </if>
+      <if test="registerTime != null" >
+        RegisterTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="loginName != null" >
+        #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null" >
+        #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="auth != null" >
+        #{auth,jdbcType=INTEGER},
+      </if>
+      <if test="userSessionId != null" >
+        #{userSessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null" >
+        #{loginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null" >
+        #{registerTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nit.weibo.model.Admin" >
+    update admin
+    <set >
+      <if test="loginName != null" >
+        LoginName = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null" >
+        LoginPwd = #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        Email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="auth != null" >
+        Auth = #{auth,jdbcType=INTEGER},
+      </if>
+      <if test="userSessionId != null" >
+        UserSessionId = #{userSessionId,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null" >
+        LoginTime = #{loginTime,jdbcType=VARCHAR},
+      </if>
+      <if test="registerTime != null" >
+        RegisterTime = #{registerTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nit.weibo.model.Admin" >
+    update admin
+    set LoginName = #{loginName,jdbcType=VARCHAR},
+      LoginPwd = #{loginPwd,jdbcType=VARCHAR},
+      Email = #{email,jdbcType=VARCHAR},
+      Auth = #{auth,jdbcType=INTEGER},
+      UserSessionId = #{userSessionId,jdbcType=VARCHAR},
+      LoginTime = #{loginTime,jdbcType=VARCHAR},
+      RegisterTime = #{registerTime,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

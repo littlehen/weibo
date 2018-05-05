@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nit.weibo.dao.BillMapper" >
+  <resultMap id="BaseResultMap" type="com.nit.weibo.model.Bill" >
+    <id column="BillId" property="billId" jdbcType="INTEGER" />
+    <result column="PayTime" property="payTime" jdbcType="VARCHAR" />
+    <result column="PublicId" property="publicId" jdbcType="VARCHAR" />
+    <result column="BussinessNo" property="bussinessNo" jdbcType="VARCHAR" />
+    <result column="BussinessNox" property="bussinessNox" jdbcType="VARCHAR" />
+    <result column="MachineNo" property="machineNo" jdbcType="VARCHAR" />
+    <result column="WxOrderId" property="wxOrderId" jdbcType="VARCHAR" />
+    <result column="ShorderId" property="shorderId" jdbcType="VARCHAR" />
+    <result column="UserType" property="userType" jdbcType="VARCHAR" />
+    <result column="TradeType" property="tradeType" jdbcType="VARCHAR" />
+    <result column="TradeStatus" property="tradeStatus" jdbcType="VARCHAR" />
+    <result column="Bank" property="bank" jdbcType="VARCHAR" />
+    <result column="MoneyType" property="moneyType" jdbcType="VARCHAR" />
+    <result column="TotalMoney" property="totalMoney" jdbcType="VARCHAR" />
+    <result column="RedBoxNum" property="redBoxNum" jdbcType="VARCHAR" />
+    <result column="BackOrderNo" property="backOrderNo" jdbcType="VARCHAR" />
+    <result column="BusbackOrderNo" property="busbackOrderNo" jdbcType="VARCHAR" />
+    <result column="BackMoneyNum" property="backMoneyNum" jdbcType="VARCHAR" />
+    <result column="BackredBoxNum" property="backredBoxNum" jdbcType="VARCHAR" />
+    <result column="BackType" property="backType" jdbcType="VARCHAR" />
+    <result column="BackStatus" property="backStatus" jdbcType="VARCHAR" />
+    <result column="ProductName" property="productName" jdbcType="VARCHAR" />
+    <result column="Datebag" property="datebag" jdbcType="VARCHAR" />
+    <result column="Shouxufei" property="shouxufei" jdbcType="VARCHAR" />
+    <result column="Feilv" property="feilv" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    BillId, PayTime, PublicId, BussinessNo, BussinessNox, MachineNo, WxOrderId, ShorderId, 
+    UserType, TradeType, TradeStatus, Bank, MoneyType, TotalMoney, RedBoxNum, BackOrderNo, 
+    BusbackOrderNo, BackMoneyNum, BackredBoxNum, BackType, BackStatus, ProductName, Datebag, 
+    Shouxufei, Feilv
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bill
+    where BillId = #{billId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bill
+    where BillId = #{billId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.nit.weibo.model.Bill" >
+    <selectKey resultType="java.lang.Integer" keyProperty="billId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bill (PayTime, PublicId, BussinessNo, 
+      BussinessNox, MachineNo, WxOrderId, 
+      ShorderId, UserType, TradeType, 
+      TradeStatus, Bank, MoneyType, 
+      TotalMoney, RedBoxNum, BackOrderNo, 
+      BusbackOrderNo, BackMoneyNum, BackredBoxNum, 
+      BackType, BackStatus, ProductName, 
+      Datebag, Shouxufei, Feilv
+      )
+    values (#{payTime,jdbcType=VARCHAR}, #{publicId,jdbcType=VARCHAR}, #{bussinessNo,jdbcType=VARCHAR}, 
+      #{bussinessNox,jdbcType=VARCHAR}, #{machineNo,jdbcType=VARCHAR}, #{wxOrderId,jdbcType=VARCHAR}, 
+      #{shorderId,jdbcType=VARCHAR}, #{userType,jdbcType=VARCHAR}, #{tradeType,jdbcType=VARCHAR}, 
+      #{tradeStatus,jdbcType=VARCHAR}, #{bank,jdbcType=VARCHAR}, #{moneyType,jdbcType=VARCHAR}, 
+      #{totalMoney,jdbcType=VARCHAR}, #{redBoxNum,jdbcType=VARCHAR}, #{backOrderNo,jdbcType=VARCHAR}, 
+      #{busbackOrderNo,jdbcType=VARCHAR}, #{backMoneyNum,jdbcType=VARCHAR}, #{backredBoxNum,jdbcType=VARCHAR}, 
+      #{backType,jdbcType=VARCHAR}, #{backStatus,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR}, 
+      #{datebag,jdbcType=VARCHAR}, #{shouxufei,jdbcType=VARCHAR}, #{feilv,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.nit.weibo.model.Bill" >
+    <selectKey resultType="java.lang.Integer" keyProperty="billId" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bill
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="payTime != null" >
+        PayTime,
+      </if>
+      <if test="publicId != null" >
+        PublicId,
+      </if>
+      <if test="bussinessNo != null" >
+        BussinessNo,
+      </if>
+      <if test="bussinessNox != null" >
+        BussinessNox,
+      </if>
+      <if test="machineNo != null" >
+        MachineNo,
+      </if>
+      <if test="wxOrderId != null" >
+        WxOrderId,
+      </if>
+      <if test="shorderId != null" >
+        ShorderId,
+      </if>
+      <if test="userType != null" >
+        UserType,
+      </if>
+      <if test="tradeType != null" >
+        TradeType,
+      </if>
+      <if test="tradeStatus != null" >
+        TradeStatus,
+      </if>
+      <if test="bank != null" >
+        Bank,
+      </if>
+      <if test="moneyType != null" >
+        MoneyType,
+      </if>
+      <if test="totalMoney != null" >
+        TotalMoney,
+      </if>
+      <if test="redBoxNum != null" >
+        RedBoxNum,
+      </if>
+      <if test="backOrderNo != null" >
+        BackOrderNo,
+      </if>
+      <if test="busbackOrderNo != null" >
+        BusbackOrderNo,
+      </if>
+      <if test="backMoneyNum != null" >
+        BackMoneyNum,
+      </if>
+      <if test="backredBoxNum != null" >
+        BackredBoxNum,
+      </if>
+      <if test="backType != null" >
+        BackType,
+      </if>
+      <if test="backStatus != null" >
+        BackStatus,
+      </if>
+      <if test="productName != null" >
+        ProductName,
+      </if>
+      <if test="datebag != null" >
+        Datebag,
+      </if>
+      <if test="shouxufei != null" >
+        Shouxufei,
+      </if>
+      <if test="feilv != null" >
+        Feilv,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="payTime != null" >
+        #{payTime,jdbcType=VARCHAR},
+      </if>
+      <if test="publicId != null" >
+        #{publicId,jdbcType=VARCHAR},
+      </if>
+      <if test="bussinessNo != null" >
+        #{bussinessNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bussinessNox != null" >
+        #{bussinessNox,jdbcType=VARCHAR},
+      </if>
+      <if test="machineNo != null" >
+        #{machineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOrderId != null" >
+        #{wxOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="shorderId != null" >
+        #{shorderId,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeType != null" >
+        #{tradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeStatus != null" >
+        #{tradeStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="moneyType != null" >
+        #{moneyType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        #{totalMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="redBoxNum != null" >
+        #{redBoxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="backOrderNo != null" >
+        #{backOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="busbackOrderNo != null" >
+        #{busbackOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="backMoneyNum != null" >
+        #{backMoneyNum,jdbcType=VARCHAR},
+      </if>
+      <if test="backredBoxNum != null" >
+        #{backredBoxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="backType != null" >
+        #{backType,jdbcType=VARCHAR},
+      </if>
+      <if test="backStatus != null" >
+        #{backStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="datebag != null" >
+        #{datebag,jdbcType=VARCHAR},
+      </if>
+      <if test="shouxufei != null" >
+        #{shouxufei,jdbcType=VARCHAR},
+      </if>
+      <if test="feilv != null" >
+        #{feilv,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nit.weibo.model.Bill" >
+    update bill
+    <set >
+      <if test="payTime != null" >
+        PayTime = #{payTime,jdbcType=VARCHAR},
+      </if>
+      <if test="publicId != null" >
+        PublicId = #{publicId,jdbcType=VARCHAR},
+      </if>
+      <if test="bussinessNo != null" >
+        BussinessNo = #{bussinessNo,jdbcType=VARCHAR},
+      </if>
+      <if test="bussinessNox != null" >
+        BussinessNox = #{bussinessNox,jdbcType=VARCHAR},
+      </if>
+      <if test="machineNo != null" >
+        MachineNo = #{machineNo,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOrderId != null" >
+        WxOrderId = #{wxOrderId,jdbcType=VARCHAR},
+      </if>
+      <if test="shorderId != null" >
+        ShorderId = #{shorderId,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        UserType = #{userType,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeType != null" >
+        TradeType = #{tradeType,jdbcType=VARCHAR},
+      </if>
+      <if test="tradeStatus != null" >
+        TradeStatus = #{tradeStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="bank != null" >
+        Bank = #{bank,jdbcType=VARCHAR},
+      </if>
+      <if test="moneyType != null" >
+        MoneyType = #{moneyType,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null" >
+        TotalMoney = #{totalMoney,jdbcType=VARCHAR},
+      </if>
+      <if test="redBoxNum != null" >
+        RedBoxNum = #{redBoxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="backOrderNo != null" >
+        BackOrderNo = #{backOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="busbackOrderNo != null" >
+        BusbackOrderNo = #{busbackOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="backMoneyNum != null" >
+        BackMoneyNum = #{backMoneyNum,jdbcType=VARCHAR},
+      </if>
+      <if test="backredBoxNum != null" >
+        BackredBoxNum = #{backredBoxNum,jdbcType=VARCHAR},
+      </if>
+      <if test="backType != null" >
+        BackType = #{backType,jdbcType=VARCHAR},
+      </if>
+      <if test="backStatus != null" >
+        BackStatus = #{backStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="productName != null" >
+        ProductName = #{productName,jdbcType=VARCHAR},
+      </if>
+      <if test="datebag != null" >
+        Datebag = #{datebag,jdbcType=VARCHAR},
+      </if>
+      <if test="shouxufei != null" >
+        Shouxufei = #{shouxufei,jdbcType=VARCHAR},
+      </if>
+      <if test="feilv != null" >
+        Feilv = #{feilv,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where BillId = #{billId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nit.weibo.model.Bill" >
+    update bill
+    set PayTime = #{payTime,jdbcType=VARCHAR},
+      PublicId = #{publicId,jdbcType=VARCHAR},
+      BussinessNo = #{bussinessNo,jdbcType=VARCHAR},
+      BussinessNox = #{bussinessNox,jdbcType=VARCHAR},
+      MachineNo = #{machineNo,jdbcType=VARCHAR},
+      WxOrderId = #{wxOrderId,jdbcType=VARCHAR},
+      ShorderId = #{shorderId,jdbcType=VARCHAR},
+      UserType = #{userType,jdbcType=VARCHAR},
+      TradeType = #{tradeType,jdbcType=VARCHAR},
+      TradeStatus = #{tradeStatus,jdbcType=VARCHAR},
+      Bank = #{bank,jdbcType=VARCHAR},
+      MoneyType = #{moneyType,jdbcType=VARCHAR},
+      TotalMoney = #{totalMoney,jdbcType=VARCHAR},
+      RedBoxNum = #{redBoxNum,jdbcType=VARCHAR},
+      BackOrderNo = #{backOrderNo,jdbcType=VARCHAR},
+      BusbackOrderNo = #{busbackOrderNo,jdbcType=VARCHAR},
+      BackMoneyNum = #{backMoneyNum,jdbcType=VARCHAR},
+      BackredBoxNum = #{backredBoxNum,jdbcType=VARCHAR},
+      BackType = #{backType,jdbcType=VARCHAR},
+      BackStatus = #{backStatus,jdbcType=VARCHAR},
+      ProductName = #{productName,jdbcType=VARCHAR},
+      Datebag = #{datebag,jdbcType=VARCHAR},
+      Shouxufei = #{shouxufei,jdbcType=VARCHAR},
+      Feilv = #{feilv,jdbcType=VARCHAR}
+    where BillId = #{billId,jdbcType=INTEGER}
+  </update>
+</mapper>
